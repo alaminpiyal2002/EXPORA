@@ -156,7 +156,9 @@ This project was built to:
 - Multi-currency support
 - Dark mode
 
-###👤 Author
-Al Amin
+### 👤 Author
+**Al Amin**
+
 Backend-Focused Django Developer
-🔗 GitHub: https://github.com/alaminpiyal2002
+
+🔗 **GitHub:** [alaminpiyal2002](https://github.com/alaminpiyal2002)
