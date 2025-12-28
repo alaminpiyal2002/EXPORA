@@ -1,0 +1,319 @@
+{% extends "base_auth.html" %}
+{% block title %}Dashboard | EXPORA{% endblock %}
+
+{% block content %}
+<style>
+  /* Dashboard specific styles */
+  .dashboard-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 16px;
+    padding: 1.5rem;
+    color: white;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+  }
+  
+  .stat-card {
+    border-radius: 16px;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  }
+  
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+  }
+  
+  .income-card::before {
+    background: linear-gradient(to bottom, #43e97b, #38f9d7);
+  }
+  
+  .expense-card::before {
+    background: linear-gradient(to bottom, #f093fb, #f5576c);
+  }
+  
+  .balance-card::before {
+    background: linear-gradient(to bottom, #4facfe, #00f2fe);
+  }
+  
+  .stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 1rem;
+  }
+  
+  .income-icon {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  }
+  
+  .expense-icon {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  }
+  
+  .balance-icon {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  }
+  
+  .action-card {
+    border-radius: 16px;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+  }
+  
+  .action-btn {
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+  }
+  
+  .primary-action {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+  }
+  
+  .primary-action:hover {
+    background: linear-gradient(135deg, #5a67d8 0%, #6b4299 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 20px rgba(102, 126, 234, 0.4);
+  }
+  
+  .secondary-action {
+    background: white;
+    color: #667eea;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+  }
+  
+  .secondary-action:hover {
+    background: rgba(102, 126, 234, 0.05);
+    border-color: #667eea;
+  }
+  
+  .transactions-card {
+    border-radius: 16px;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+  }
+  
+  .transaction-table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  
+  .transaction-table tbody tr {
+    transition: all 0.2s ease;
+  }
+  
+  .transaction-table tbody tr:hover {
+    background-color: rgba(102, 126, 234, 0.05);
+  }
+  
+  .transaction-table tbody tr td {
+    border: none;
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .badge-income {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    color: white;
+    padding: 0.35rem 0.65rem;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 0.75rem;
+  }
+  
+  .badge-expense {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    padding: 0.35rem 0.65rem;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 0.75rem;
+  }
+  
+  .dashboard-tip {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-left: 4px solid #667eea;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  /* Add subtle background pattern for better contrast */
+  body {
+    background-color: #f8f9fa;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23667eea' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+</style>
+
+<div class="dashboard-header fade-in">
+  <h2 class="fw-bold mb-1">Welcome back, {{ request.user.first_name }}!</h2>
+  <p class="mb-0 opacity-90">Here's your financial overview for today.</p>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-md-4 fade-in" style="animation-delay: 0.1s;">
+    <div class="card stat-card income-card h-100">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div class="stat-icon income-icon text-white me-3">
+            <i class="bi bi-arrow-down-circle-fill"></i>
+          </div>
+          <div>
+            <div class="text-muted small">Total Income</div>
+            <div class="fs-4 fw-bold text-success">Tk. {{ income }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 fade-in" style="animation-delay: 0.2s;">
+    <div class="card stat-card expense-card h-100">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div class="stat-icon expense-icon text-white me-3">
+            <i class="bi bi-arrow-up-circle-fill"></i>
+          </div>
+          <div>
+            <div class="text-muted small">Total Expense</div>
+            <div class="fs-4 fw-bold text-danger">Tk. {{ expense }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 fade-in" style="animation-delay: 0.3s;">
+    <div class="card stat-card balance-card h-100">
+      <div class="card-body">
+        <div class="d-flex align-items-center">
+          <div class="stat-icon balance-icon text-white me-3">
+            <i class="bi bi-wallet2-fill"></i>
+          </div>
+          <div>
+            <div class="text-muted small">Balance</div>
+            <div class="fs-4 fw-bold text-primary">Tk. {{ balance }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-8 fade-in" style="animation-delay: 0.4s;">
+    <div class="card action-card">
+      <div class="card-body">
+        <h6 class="fw-semibold mb-3">Quick Actions</h6>
+
+        <div class="d-flex gap-3 flex-wrap">
+          <a href="/transactions/" class="action-btn primary-action">
+            <i class="bi bi-plus-circle me-2"></i>Add Transaction
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-lg-4 fade-in" style="animation-delay: 0.5s;">
+    <div class="card action-card h-100">
+      <div class="card-body d-flex flex-column justify-content-between">
+        <div>
+          <h6 class="fw-semibold mb-3">Financial Tip</h6>
+          <p class="mb-0 text-muted">Track your expenses regularly to identify areas where you can save money and improve your financial health.</p>
+        </div>
+        <div class="mt-3 text-end">
+          <i class="bi bi-lightbulb text-warning" style="font-size: 1.5rem;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-4">
+  <div class="col-lg-8 fade-in" style="animation-delay: 0.6s;">
+    <div class="card transactions-card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="fw-semibold mb-0">Recent Transactions</h6>
+          <a href="/transactions/" class="small text-decoration-none d-flex align-items-center">
+            View all <i class="bi bi-arrow-right ms-1"></i>
+          </a>
+        </div>
+
+        {% if recent_transactions %}
+          <table class="table transaction-table align-middle mb-0">
+            <tbody>
+              {% for t in recent_transactions %}
+              <tr>
+                <td>{{ t.date }}</td>
+                <td>{{ t.category.name }}</td>
+                <td>
+                  {% if t.type == "INCOME" %}
+                    <span class="badge-income">Income</span>
+                  {% else %}
+                    <span class="badge-expense">Expense</span>
+                  {% endif %}
+                </td>
+                <td class="fw-semibold">
+                  {{ t.amount }}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <div class="text-center py-4">
+            <i class="bi bi-inbox text-muted" style="font-size: 2rem;"></i>
+            <p class="text-muted mb-0 mt-2">No transactions yet.</p>
+      
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="dashboard-tip fade-in" style="animation-delay: 0.7s;">
+  <div class="d-flex align-items-center">
+    <i class="bi bi-info-circle me-2 text-primary"></i>
+    <span class="small">Use this dashboard to monitor your financial health at a glance. Regular tracking helps you make better financial decisions.</span>
+  </div>
+</div>
+{% endblock %}

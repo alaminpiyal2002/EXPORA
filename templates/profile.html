@@ -1,0 +1,230 @@
+{% extends "base_auth.html" %}
+{% block title %}Edit Profile | EXPORA{% endblock %}
+
+{% block content %}
+<style>
+  /* Edit Profile page specific styles */
+  .profile-container {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23667eea' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    padding: 2rem 0;
+  }
+  
+  .profile-card {
+    border-radius: 20px;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .profile-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(50, 50, 93, 0.15), 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem;
+    text-align: center;
+    color: white;
+    position: relative;
+  }
+  
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 3rem;
+    font-weight: bold;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .profile-body {
+    padding: 2.5rem;
+  }
+  
+  .form-control {
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0.875rem 1.25rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: rgba(248, 249, 250, 0.5);
+  }
+  
+  .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    background-color: white;
+  }
+  
+  .form-label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 0.5rem;
+  }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  }
+  
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #5a67d8 0%, #6b4299 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  }
+  
+  .btn-outline-secondary {
+    border: 1px solid rgba(108, 117, 125, 0.3);
+    color: #6c757d;
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-outline-secondary:hover {
+    background-color: rgba(108, 117, 125, 0.1);
+    border-color: #6c757d;
+    color: #495057;
+  }
+  
+  .input-icon {
+    position: relative;
+  }
+  
+  .input-icon i {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #667eea;
+    pointer-events: none;
+  }
+  
+  .profile-info {
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  .info-item i {
+    color: #667eea;
+    margin-right: 0.5rem;
+    width: 20px;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .fade-in {
+    animation: fadeIn 0.8s ease-out;
+  }
+</style>
+
+<div class="profile-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 fade-in">
+        <div class="profile-card">
+          <div class="profile-header">
+            <div class="profile-avatar">
+              {{ request.user.first_name|first }}{{ request.user.last_name|first }}
+            </div>
+            <h4 class="fw-bold mb-1">{{ request.user.first_name }} {{ request.user.last_name }}</h4>
+            <p class="mb-0 opacity-90">@{{ request.user.username }}</p>
+          </div>
+          
+          <div class="profile-body">
+            <div class="profile-info">
+              <h6 class="fw-semibold mb-3">Account Information</h6>
+              <div class="info-item">
+                <i class="bi bi-person-circle"></i>
+                <span>Username: {{ request.user.username }}</span>
+              </div>
+              <div class="info-item">
+                <i class="bi bi-calendar"></i>
+                <span>Member since: {{ request.user.date_joined|date:"M d, Y" }}</span>
+              </div>
+            </div>
+
+            <h5 class="fw-bold mb-3">Edit Profile</h5>
+
+            <form method="post">
+              {% csrf_token %}
+
+              <div class="mb-3">
+                <label class="form-label">
+                  <i class="bi bi-person me-2"></i>First Name
+                </label>
+                <div class="input-icon">
+                  <input class="form-control" name="first_name"
+                         value="{{ request.user.first_name }}" required>
+                  <i class="bi bi-person"></i>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">
+                  <i class="bi bi-person me-2"></i>Last Name
+                </label>
+                <div class="input-icon">
+                  <input class="form-control" name="last_name"
+                         value="{{ request.user.last_name }}" required>
+                  <i class="bi bi-person"></i>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label">
+                  <i class="bi bi-envelope me-2"></i>Email
+                </label>
+                <div class="input-icon">
+                  <input type="email" class="form-control" name="email"
+                         value="{{ request.user.email }}">
+                  <i class="bi bi-envelope"></i>
+                </div>
+              </div>
+
+              <div class="d-flex gap-3">
+                <button class="btn btn-primary">
+                  <i class="bi bi-check-circle me-2"></i>Save Changes
+                </button>
+                <a href="/dashboard/" class="btn btn-outline-secondary">
+                  <i class="bi bi-x-circle me-2"></i>Cancel
+                </a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

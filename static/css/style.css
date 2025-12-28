@@ -1,0 +1,27 @@
+.card {
+  background: #ffffff;
+}
+
+h6 {
+  letter-spacing: 0.3px;
+}
+
+.btn {
+  border-radius: 12px;
+}
+.card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+.table td {
+  padding: 0.6rem 0.5rem;
+}
+
+.badge {
+  border-radius: 8px;
+}

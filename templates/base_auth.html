@@ -1,0 +1,161 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Dashboard | EXPORA{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  
+  <!-- Custom styles for EXPORA branding -->
+  <style>
+    /* Special styling for EXPORA logo */
+    .app-logo {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-weight: 900;
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+      display: inline-block;
+      position: relative;
+    }
+    
+    .app-logo:hover {
+      text-decoration: none;
+    }
+    
+    .app-logo::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      border-radius: 2px;
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+    
+    .app-logo:hover::after {
+      transform: scaleX(1);
+    }
+    
+    @keyframes glow {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.1); }
+    }
+    
+    .app-logo {
+      animation: glow 3s ease-in-out infinite;
+    }
+    
+    /* Enhanced dropdown styling */
+    .dropdown-toggle {
+      border: 1px solid rgba(102, 126, 234, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .dropdown-toggle:hover {
+      border-color: #667eea;
+      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+    }
+    
+    /* Enhanced dropdown menu */
+    .dropdown-menu {
+      border: 1px solid rgba(102, 126, 234, 0.1);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .dropdown-item:hover {
+      background-color: rgba(102, 126, 234, 0.1);
+    }
+    
+    /* Alert styling */
+    .alert {
+      border-radius: 10px;
+      border-left: 4px solid;
+    }
+    
+    .alert-success {
+      border-left-color: #43e97b;
+    }
+    
+    .alert-danger {
+      border-left-color: #f5576c;
+    }
+    
+    .alert-warning {
+      border-left-color: #ffc107;
+    }
+    
+    .alert-info {
+      border-left-color: #4facfe;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm">
+  <div class="container">
+    <a class="navbar-brand" href="/dashboard/">
+      <span class="app-logo">EXPORA</span>
+    </a>
+
+    <div class="dropdown ms-auto">
+      <button class="btn btn-light dropdown-toggle d-flex align-items-center gap-2"
+              data-bs-toggle="dropdown">
+        <span class="bi bi-person-circle"></span>
+        {{ request.user.first_name }} {{ request.user.last_name }}
+      </button>
+
+      <div class="dropdown-menu dropdown-menu-end shadow-sm rounded-4 p-3" style="min-width: 220px;">
+        <div class="fw-semibold">
+          {{ request.user.username }}
+        </div>
+        <div class="text-muted small mb-2">
+          {{ request.user.email }}
+        </div>
+
+        <hr>
+
+        <a class="dropdown-item" href="/profile/">
+          <i class="bi bi-person me-2"></i>Edit Profile
+        </a>
+        <a class="dropdown-item" href="/password-change/">
+          <i class="bi bi-key me-2"></i>Change Password
+        </a>
+        <a class="dropdown-item text-danger" href="/logout/">
+          <i class="bi bi-box-arrow-right me-2"></i>Logout
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+{% if messages %}
+<div class="container mt-3">
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="container py-4">
+  {% block content %}{% endblock %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
