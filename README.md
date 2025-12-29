@@ -2,8 +2,14 @@
 
 **EXPORA** is a backend-driven expense tracking web application built with **Django** that helps users track their daily income and expenses, understand spending habits, and maintain better financial control — all through a clean, intuitive interface.
 
-> 🔗 **Live Demo:** _(Coming soon)_  
-> 👤 **Demo Access:** Users can sign up and try the system freely
+Users can track income and expenses, organize transactions by category, and view financial summaries that provide a clear overview of their spending behavior. The project is built with production awareness in mind and demonstrates practical backend development and deployment workflows.
+
+## 🌐 Live Demo
+
+🔗 **EXPORA: ** https://expora.onrender.com  
+
+> ⚠️ Note: The app is hosted on Render’s free tier, so the first load may take 30–60 seconds due to server sleep.
+
 
 ---
 
