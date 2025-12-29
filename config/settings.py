@@ -26,7 +26,11 @@ SECRET_KEY = 'django-insecure-2a)e2o_)ew74-%++&l@1v)470##h7x%^_+$^$a+d6f8i8^yocd
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "expora.onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
 
 
 # Application definition
